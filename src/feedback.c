@@ -8,16 +8,10 @@ bool textle_is_five_letters(const char *word)
 {
     size_t i;
 
-    if (word == NULL || strlen(word) != TEXTLE_WORD_LENGTH) {
-        return false;
-    }
-
+    if (word == NULL || strlen(word) != TEXTLE_WORD_LENGTH) return false;
     for (i = 0; i < TEXTLE_WORD_LENGTH; ++i) {
-        if (!isalpha((unsigned char)word[i])) {
-            return false;
-        }
+        if (!isalpha((unsigned char)word[i])) return false;
     }
-
     return true;
 }
 
@@ -25,39 +19,32 @@ void textle_score_guess(const char answer[TEXTLE_WORD_LENGTH + 1],
                         const char guess[TEXTLE_WORD_LENGTH + 1],
                         char feedback[TEXTLE_WORD_LENGTH * 2 + 1])
 {
-    bool answer_used[TEXTLE_WORD_LENGTH] = { false };
-    bool guess_exact[TEXTLE_WORD_LENGTH] = { false };
-    size_t i;
-    size_t out = 0;
+    bool used[TEXTLE_WORD_LENGTH] = { false };
+    bool exact[TEXTLE_WORD_LENGTH] = { false };
+    size_t i, out = 0;
 
-    /* Pass one: lock in exact-position matches first. */
+    /* Exact matches consume their answer letters before misplaced matches. */
     for (i = 0; i < TEXTLE_WORD_LENGTH; ++i) {
-        if (guess[i] == answer[i]) {
-            answer_used[i] = true;
-            guess_exact[i] = true;
+        if (answer[i] == guess[i]) {
+            used[i] = true;
+            exact[i] = true;
         }
     }
 
-    /*
-     * Pass two: each remaining guessed letter may use only one remaining
-     * copy in the answer. Exact matches have already consumed their copies.
-     */
     for (i = 0; i < TEXTLE_WORD_LENGTH; ++i) {
         size_t j;
         bool misplaced = false;
 
-        if (i != 0) {
-            feedback[out++] = ' ';
-        }
+        if (i != 0) feedback[out++] = ' ';
 
-        if (guess_exact[i]) {
+        if (exact[i]) {
             feedback[out++] = guess[i];
             continue;
         }
 
         for (j = 0; j < TEXTLE_WORD_LENGTH; ++j) {
-            if (!answer_used[j] && guess[i] == answer[j]) {
-                answer_used[j] = true;
+            if (!used[j] && answer[j] == guess[i]) {
+                used[j] = true;
                 misplaced = true;
                 break;
             }
@@ -70,6 +57,5 @@ void textle_score_guess(const char answer[TEXTLE_WORD_LENGTH + 1],
             feedback[out++] = '_';
         }
     }
-
     feedback[out] = '\0';
 }

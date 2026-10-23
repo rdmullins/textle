@@ -8,7 +8,6 @@ static void expect_score(const char *answer, const char *guess,
                          const char *expected)
 {
     char feedback[TEXTLE_WORD_LENGTH * 2 + 1];
-
     textle_score_guess(answer, guess, feedback);
     if (strcmp(feedback, expected) != 0) {
         fprintf(stderr, "%s vs %s: expected [%s], got [%s]\n",
