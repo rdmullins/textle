@@ -122,7 +122,7 @@ static int play_round(const char *answer)
 
     for (attempt = 1; attempt <= TEXTLE_MAX_GUESSES; ++attempt) {
         char guess[TEXTLE_WORD_LENGTH + 1];
-        char feedback[TEXTLE_WORD_LENGTH * 2 + 1];
+        char feedback[TEXTLE_FEEDBACK_SIZE];
         char *word;
         size_t i;
 
