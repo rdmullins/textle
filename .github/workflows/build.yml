@@ -1,0 +1,16 @@
+name: Build and test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Build game
+        run: make clean all
+      - name: Run scoring tests
+        run: make test
