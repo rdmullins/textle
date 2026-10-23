@@ -23,13 +23,11 @@ int main(void)
     assert(!textle_is_five_letters("four"));
     assert(!textle_is_five_letters("sixxxx"));
     assert(!textle_is_five_letters("ab d!"));
-
     expect_score("GLITZ", "GLITZ", "G L I T Z");
     expect_score("GLITZ", "GRIFT", "G _ I _ T*");
     expect_score("SHEEP", "EERIE", "E* E* _ _ _");
     expect_score("APPLE", "ALLEY", "A L* _ _ E");
     expect_score("LEVEL", "LEEEE", "L E E* E* _");
-
     puts("All feedback tests passed.");
     return 0;
 }
