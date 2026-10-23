@@ -1,0 +1,8 @@
+# Compiled program
+/textle
+/tests/test_feedback
+
+# Editor and OS files
+*~
+*.swp
+.DS_Store
