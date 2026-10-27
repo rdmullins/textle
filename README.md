@@ -10,9 +10,10 @@ Textle is a small, dependency-free C word game. Guess the secret five-letter wor
 - A letter in the correct position is shown in place.
 - A letter followed by `*` is in the answer but in a different position.
 - An underscore means no unused copy of that letter remains in the answer.
+- After each guess, an alphabet tracker marks confirmed letters: `*` means present, `X` means absent, and a blank means not yet determined.
 - You have six guesses. Enter `Q` to quit a round.
 
-The scoring algorithm handles repeated letters by matching exact positions first, then marking misplaced letters from any remaining copies in the answer.
+The scoring algorithm handles repeated letters by matching exact positions first, then marking misplaced letters from any remaining copies in the answer. The alphabet tracker retains confirmed-present letters even if a later guess contains extra copies that receive absent feedback.
 
 ## Build and run
 

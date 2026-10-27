@@ -110,16 +110,30 @@ static void print_instructions(void)
     puts("A letter in the correct place stays in place.");
     puts("A letter followed by * is in the word, but elsewhere.");
     puts("An underscore means no unused matching letter remains.");
+    puts("Alphabet tracker: * = present, X = absent, blank = unknown.");
     puts("Enter any five letters; guesses need not be dictionary words.");
     puts("Enter Q to quit a round.");
+    putchar('\n');
+}
+
+static void print_alphabet_tracker(
+    const char status[TEXTLE_ALPHABET_SIZE])
+{
+    size_t i;
+
+    puts("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    for (i = 0; i < TEXTLE_ALPHABET_SIZE; ++i)
+        putchar(status[i]);
     putchar('\n');
 }
 
 static int play_round(const char *answer)
 {
     char input[WORD_LINE_SIZE];
+    char alphabet_status[TEXTLE_ALPHABET_SIZE];
     int attempt;
 
+    memset(alphabet_status, TEXTLE_TRACKER_UNKNOWN, sizeof(alphabet_status));
     for (attempt = 1; attempt <= TEXTLE_MAX_GUESSES; ++attempt) {
         char guess[TEXTLE_WORD_LENGTH + 1];
         char feedback[TEXTLE_FEEDBACK_SIZE];
@@ -147,7 +161,9 @@ static int play_round(const char *answer)
         guess[TEXTLE_WORD_LENGTH] = '\0';
 
         textle_score_guess(answer, guess, feedback);
+        textle_update_alphabet(alphabet_status, guess, feedback);
         puts(feedback);
+        print_alphabet_tracker(alphabet_status);
         if (strcmp(guess, answer) == 0) {
             puts("Correct!");
             return 0;
