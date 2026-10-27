@@ -56,3 +56,29 @@ void textle_score_guess(const char answer[TEXTLE_WORD_LENGTH + 1],
     }
     feedback[out] = '\0';
 }
+
+void textle_update_alphabet(
+    char status[TEXTLE_ALPHABET_SIZE],
+    const char guess[TEXTLE_WORD_LENGTH + 1],
+    const char feedback[TEXTLE_FEEDBACK_SIZE])
+{
+    size_t i, pos = 0;
+
+    for (i = 0; i < TEXTLE_WORD_LENGTH; ++i) {
+        int letter = toupper((unsigned char)guess[i]) - 'A';
+        char result;
+
+        while (feedback[pos] == ' ') ++pos;
+        result = feedback[pos];
+
+        if (result == '_') {
+            if (status[letter] != TEXTLE_TRACKER_PRESENT)
+                status[letter] = TEXTLE_TRACKER_ABSENT;
+            ++pos;
+        } else {
+            status[letter] = TEXTLE_TRACKER_PRESENT;
+            ++pos;
+            if (feedback[pos] == '*') ++pos;
+        }
+    }
+}
