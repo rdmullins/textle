@@ -16,6 +16,30 @@ static void expect_score(const char *answer, const char *guess,
     }
 }
 
+static void test_alphabet_tracker(void)
+{
+    char status[TEXTLE_ALPHABET_SIZE];
+    char feedback[TEXTLE_FEEDBACK_SIZE];
+
+    memset(status, TEXTLE_TRACKER_UNKNOWN, sizeof(status));
+    textle_score_guess("GLITZ", "GRIFT", feedback);
+    textle_update_alphabet(status, "GRIFT", feedback);
+
+    assert(status['G' - 'A'] == TEXTLE_TRACKER_PRESENT);
+    assert(status['I' - 'A'] == TEXTLE_TRACKER_PRESENT);
+    assert(status['T' - 'A'] == TEXTLE_TRACKER_PRESENT);
+    assert(status['R' - 'A'] == TEXTLE_TRACKER_ABSENT);
+    assert(status['F' - 'A'] == TEXTLE_TRACKER_ABSENT);
+    assert(status['A' - 'A'] == TEXTLE_TRACKER_UNKNOWN);
+
+    /*
+     * A later all-absent result for a repeated letter must not erase
+     * an earlier confirmed-present status.
+     */
+    textle_update_alphabet(status, "TTTTT", "_ _ _ _ _");
+    assert(status['T' - 'A'] == TEXTLE_TRACKER_PRESENT);
+}
+
 int main(void)
 {
     assert(textle_is_five_letters("GRIFT"));
@@ -29,6 +53,8 @@ int main(void)
     expect_score("SHEEP", "EERIE", "E* E* _ _ _");
     expect_score("APPLE", "ALLEY", "A L* _ E* _");
     expect_score("LEVEL", "LEEEE", "L E _ E _");
+
+    test_alphabet_tracker();
 
     puts("All feedback tests passed.");
     return 0;
