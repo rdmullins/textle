@@ -20,6 +20,7 @@ static void test_alphabet_tracker(void)
 {
     char status[TEXTLE_ALPHABET_SIZE];
     char feedback[TEXTLE_FEEDBACK_SIZE];
+    char all_absent[TEXTLE_FEEDBACK_SIZE] = "_ _ _ _ _";
 
     memset(status, TEXTLE_TRACKER_UNKNOWN, sizeof(status));
     textle_score_guess("GLITZ", "GRIFT", feedback);
@@ -36,7 +37,7 @@ static void test_alphabet_tracker(void)
      * A later all-absent result for a repeated letter must not erase
      * an earlier confirmed-present status.
      */
-    textle_update_alphabet(status, "TTTTT", "_ _ _ _ _");
+    textle_update_alphabet(status, "TTTTT", all_absent);
     assert(status['T' - 'A'] == TEXTLE_TRACKER_PRESENT);
 }
 
